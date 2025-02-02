@@ -321,7 +321,7 @@ static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't wor
     size_t idx = hash(num);
     ChainNode *head = set->nodes[idx];
 
-    while (set->nodes[idx] != NULL)
+    while (set->nodes[idx])
     {
         if (set->nodes[idx]->num == num)
         {
