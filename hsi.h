@@ -319,6 +319,10 @@ static HSResult hs_contains(HS *set, int num)
 static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't working as expected with README example.
 {
     size_t idx = hash(num);
+    if (idx >= set->capacity)
+    {
+        return HS_CAPACITY_ERR;
+    }
     ChainNode *head = set->nodes[idx];
 
     while (set->nodes[idx])
