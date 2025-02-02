@@ -323,7 +323,7 @@ static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't wor
 
     while (set->nodes[idx])
     {
-        if (set->nodes[idx]->num == num)
+        if (set->nodes[idx] && set->nodes[idx]->num == num)
         {
             //Either there's at least one node after, or none.
             if (!set->nodes[idx]->next)
