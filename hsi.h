@@ -323,6 +323,10 @@ static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't wor
     {
         return HS_CAPACITY_ERR;
     }
+    if (set->nodes[idx] == NULL)
+    {
+        return HS_NONMEMBER_ERR;
+    }
     ChainNode *head = set->nodes[idx];
 
     while (set->nodes[idx])
