@@ -22,11 +22,11 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 #include <stdlib.h>
 
 #ifdef HS_DEBUG
-    #include <stdarg.h> //TODO figure out if these should be indented or not per standard practice.
+    #include <stdarg.h> //TODO figure out if these should be indented or not, per standard practice.
     #include <stdio.h>
 #endif
 
-#define HS_INITIAL_LENGTH 10000 //Right now, we're keeping this set at one value throughout. However, this can be a starting point if we later move to dynamically resizing.
+#define HS_INITIAL_LENGTH 4096 //Right now, we're keeping this set at one value throughout. However, this can be a starting point if we later move to dynamically resizing.
 
 typedef enum HSResult {
     HS_SUCCESS = 0,
