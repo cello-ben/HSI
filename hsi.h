@@ -22,8 +22,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 #include <stdlib.h>
 
 #ifdef HS_DEBUG
-#include <stdarg.h>
-#include <stdio.h>
+    #include <stdarg.h> //TODO figure out if these should be indented or not per standard practice.
+    #include <stdio.h>
 #endif
 
 #define HS_INITIAL_LENGTH 10000 //Right now, we're keeping this set at one value throughout. However, this can be a starting point if we later move to dynamically resizing.
@@ -57,12 +57,12 @@ typedef struct HS {
 
 //TODO add MingW support (Z instead of z).
 
-//TODO figure out if we want inline or not.
+//TODO figure out if we want "inline" or not.
 
 //TODO add resizing based upon some maximum number of nodes per bucket.
 
 /**
- * Takes in a format string and variadic arguments, but only does anything with them if DEBUG is defined (just returns 0 otherwise).
+ * Takes in a format string and variadic arguments, but only does something with them if HS_DEBUG is defined (just returns 0 otherwise).
  */
 
 static HSResult _hs_debug_printf(const char *fmt, ...)
@@ -300,7 +300,6 @@ static HSResult hs_add(HS *set, long _num) //h/t to u/joshbadams (Reddit) for th
     node->num = num;
     node->next = set->nodes[idx];
     set->nodes[idx] = node;
-    // free(node); //TODO figure out why freeing this causes a use after free bug (currently leaking).
     return HS_SUCCESS;
 }
 
@@ -342,13 +341,12 @@ static HSResult hs_contains(HS *set, int num)
  * Removes a given int from a given set, and returns an error if it is not present (may change later).
  */
 
-static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't working as expected with README example.
+static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't working as expected with README example. Another h/t to u/joshbadams (Reddit) for some great...pointers (haHAAAAAA!).
 {
     size_t idx = hash(num);
     ChainNode *tmp, *prev;
     tmp = set->nodes[idx];
     prev = NULL;
-    // _hs_debug_print_list(tmp);
     while (tmp)
     {
         if (tmp->num == num)

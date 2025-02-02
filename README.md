@@ -30,4 +30,4 @@ int main(void)
 ```
 
 ## Generative AI Disclosure
-Generative AI was not used in the creation of hsi.h. It was created by hand with occasional community help with debugging. driver.c WAS created by generative AI as a time-saving measure, just to test the implementation.
+Generative AI was not used in the creation of hsi.h. It was created by hand with occasional community help with debugging. driver.c WAS initially created by generative AI as a time-saving measure, just to test the implementation. Thereafter, I removed that implementation.
