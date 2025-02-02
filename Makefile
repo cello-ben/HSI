@@ -9,5 +9,8 @@ debug:
 	gcc -g -o hsi $(SRC_DIR)/*.c $(CFLAGS)
 	rm -f *.o
 
+test:
+	./hsi
+
 clean:
 	rm -rf hsi hsi.dSYM
