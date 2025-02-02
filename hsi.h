@@ -57,6 +57,10 @@ typedef struct HS {
 
 //TODO add MingW support (Z instead of z).
 
+//TODO figure out if we want inline or not.
+
+//TODO add resizing based upon some maximum number of nodes per bucket.
+
 /**
  * Takes in a format string and variadic arguments, but only does anything with them if DEBUG is defined (just returns 0 otherwise).
  */
@@ -315,28 +319,29 @@ static HSResult hs_contains(HS *set, int num)
 static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't working as expected with README example.
 {
     size_t idx = hash(num);
-    if (set == NULL || set->nodes == NULL)
+    ChainNode *head = set->nodes[idx];
+
+    while (set->nodes[idx] != NULL)
     {
-        return HS_NULL_REFERENCE_ERR;
-    }
-    if (set->nodes[idx]->num == num && (set->nodes[idx]->next == NULL || !set->nodes[idx]->next)) //Check if the node is the sole node and equals the num.
-    {
-        free(set->nodes[idx]);
-        set->nodes[idx] = NULL; //TODO figure out if I need this, or if the free action will ensure NULL.
-    }
-    while (set->nodes[idx]->next != NULL) //TODO redo for == NULL instead of != NULL consistency.
-    {
-        if (set->nodes[idx]->next != NULL && set->nodes[idx]->next->next != NULL)
+        if (set->nodes[idx]->num == num)
         {
-            if (set->nodes[idx]->next->next->num == num)
+            //Either there's at least one node after, or none.
+            if (!set->nodes[idx]->next)
             {
-                ChainNode *ptr = set->nodes[idx]->next;
-                set->nodes[idx]->next = set->nodes[idx]->next->next;
-                free(ptr);
+                free(set->nodes[idx]);
+                set->nodes[idx] = head;
+                return HS_SUCCESS;
+            }
+            else
+            {
+                set->nodes[idx] = set->nodes[idx]->next;
+                free(set->nodes[idx]->next);
+                return HS_SUCCESS;
             }
         }
         set->nodes[idx] = set->nodes[idx]->next;
     }
+
     return HS_NONMEMBER_ERR; //TODO Figure out if we are checking all possible conditions before getting here, and whether or not we want to fail silently if there is nothing to delete.
 }
 
