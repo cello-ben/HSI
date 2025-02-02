@@ -1,3 +1,5 @@
+[![C/C++ CI](https://github.com/cello-ben/HSI/actions/workflows/c.yml/badge.svg)](https://github.com/cello-ben/HSI/actions/workflows/c.yml)
+
 # HSI
 Hash sets are tremendously useful data structures, and it's easy to take them for granted in languages like Python or C#. After all, we don't usually need to be overly concerned about exactly how they are implemented. However, I figured a great exercise would be to create my own in pure C. This implementation uses chaining to mitigate hash collisions. It is a work in progress that is not yet production-ready, but I am developing it actively.
 
