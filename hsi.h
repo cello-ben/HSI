@@ -26,7 +26,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 #include <stdio.h>
 #endif
 
-#define HS_INITIAL_LENGTH 2048 //Right now, we're keeping this set at one value throughout. However, this can be a starting point if we later move to dynamically resizing.
+#define HS_INITIAL_LENGTH 10000 //Right now, we're keeping this set at one value throughout. However, this can be a starting point if we later move to dynamically resizing.
 
 typedef enum HSResult {
     HS_SUCCESS = 0,
@@ -170,6 +170,32 @@ static HSResult _hs_debug_printf(const char *fmt, ...)
         {
             return HS_DEBUG_PRINT_ERR;
         }
+    #endif
+    return HS_SUCCESS; //TODO figure out whether or not to return from the enum here, as opposed to just 0, since we're not actually doing any operations besides returning.
+ }
+
+ /**
+ * Prints the contents of a linked list of ChainNode structure pointers.
+ */
+
+ static HSResult _hs_debug_print_list(ChainNode *node)
+ {
+    #ifdef HS_DEBUG
+    int printf_res;
+        while (node)
+        {
+            printf_res = printf("%d ", node->num);
+            if (printf_res < 0)
+            {
+                return HS_DEBUG_PRINT_ERR;
+            }
+            node = node->next;
+        }
+    printf_res = printf("\n\n");
+    if (printf_res < 0)
+    {
+        return HS_DEBUG_PRINT_ERR;
+    }
     #endif
     return HS_SUCCESS; //TODO figure out whether or not to return from the enum here, as opposed to just 0, since we're not actually doing any operations besides returning.
  }
@@ -319,35 +345,29 @@ static HSResult hs_contains(HS *set, int num)
 static HSResult hs_delete(HS *set, int num) //TODO figure out why this isn't working as expected with README example.
 {
     size_t idx = hash(num);
-    if (idx >= set->capacity)
+    ChainNode *tmp, *prev;
+    tmp = set->nodes[idx];
+    prev = NULL;
+    // _hs_debug_print_list(tmp);
+    while (tmp)
     {
-        return HS_CAPACITY_ERR;
-    }
-    if (set->nodes[idx] == NULL)
-    {
-        return HS_NONMEMBER_ERR;
-    }
-    ChainNode *head = set->nodes[idx];
-
-    while (set->nodes[idx])
-    {
-        if (set->nodes[idx] && set->nodes[idx]->num == num)
+        if (tmp->num == num)
         {
-            //Either there's at least one node after, or none.
-            if (!set->nodes[idx]->next)
+            if (prev != NULL)
             {
-                free(set->nodes[idx]);
-                set->nodes[idx] = head;
+                prev->next = tmp->next;
+                free(tmp);
                 return HS_SUCCESS;
             }
             else
             {
                 set->nodes[idx] = set->nodes[idx]->next;
-                free(set->nodes[idx]->next);
+                free(tmp);
                 return HS_SUCCESS;
             }
         }
-        set->nodes[idx] = set->nodes[idx]->next;
+        prev = tmp;
+        tmp = tmp->next;
     }
 
     return HS_NONMEMBER_ERR; //TODO Figure out if we are checking all possible conditions before getting here, and whether or not we want to fail silently if there is nothing to delete.
